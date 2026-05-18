@@ -1,0 +1,21 @@
+[project]
+name = "dinov3-learning-resource"
+version = "0.1.0"
+description = "An extensive, visual learning resource explaining how DINOv3 works"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "torch>=2.4",
+    "torchvision>=0.19",
+    "transformers>=4.53",
+    "huggingface-hub>=0.24",
+    "scikit-learn>=1.4",
+    "umap-learn>=0.5",
+    "matplotlib>=3.8",
+    "numpy>=1.26,<2.3",
+    "pillow>=10",
+    "tqdm>=4.66",
+]
+
+# This is an application, not a distributable package: tell uv not to build it.
+[tool.uv]
+package = false
