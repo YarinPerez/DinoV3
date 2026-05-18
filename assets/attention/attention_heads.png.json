@@ -1,0 +1,6 @@
+{
+  "figure": "attention_heads.png",
+  "group": "attention",
+  "script": "03",
+  "model": "ViT-B/14"
+}

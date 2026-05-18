@@ -1,0 +1,28 @@
+{
+  "figure": "model_comparison.png",
+  "group": "evaluation",
+  "script": "09",
+  "stats": {
+    "vits14": {
+      "label": "ViT-S/14",
+      "params": 22.056576,
+      "dim": 384,
+      "latency": 4.01158332824707,
+      "knn": 0.9894999861717224
+    },
+    "vitb14": {
+      "label": "ViT-B/14",
+      "params": 86.58048,
+      "dim": 768,
+      "latency": 8.775115013122559,
+      "knn": 0.9929999709129333
+    },
+    "vitl14": {
+      "label": "ViT-L/14",
+      "params": 304.36864,
+      "dim": 1024,
+      "latency": 30.69894313812256,
+      "knn": 0.9925000071525574
+    }
+  }
+}

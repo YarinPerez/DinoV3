@@ -1,0 +1,6 @@
+{
+  "figure": "retrieval_gallery.png",
+  "group": "retrieval",
+  "script": "10",
+  "model": "vitb14"
+}

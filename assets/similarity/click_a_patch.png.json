@@ -1,0 +1,6 @@
+{
+  "figure": "click_a_patch.png",
+  "group": "similarity",
+  "script": "04",
+  "model": "ViT-B/14"
+}

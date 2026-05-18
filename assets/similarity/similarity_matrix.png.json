@@ -1,0 +1,6 @@
+{
+  "figure": "similarity_matrix.png",
+  "group": "similarity",
+  "script": "04",
+  "model": "ViT-B/14"
+}

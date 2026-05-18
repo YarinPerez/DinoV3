@@ -1,0 +1,6 @@
+{
+  "figure": "pca_feature_maps.png",
+  "group": "features",
+  "script": "02",
+  "model": "ViT-B/14"
+}

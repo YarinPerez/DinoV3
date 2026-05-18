@@ -1,0 +1,6 @@
+{
+  "figure": "dense_correspondence.png",
+  "group": "correspondence",
+  "script": "05",
+  "model": "ViT-B/14"
+}

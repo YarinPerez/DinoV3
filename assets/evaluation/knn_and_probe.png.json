@@ -1,0 +1,22 @@
+{
+  "figure": "knn_and_probe.png",
+  "group": "evaluation",
+  "script": "07",
+  "results": {
+    "vits14": {
+      "label": "ViT-S/14",
+      "knn": 0.9894999861717224,
+      "probe": 0.9829999804496765
+    },
+    "vitb14": {
+      "label": "ViT-B/14",
+      "knn": 0.9929999709129333,
+      "probe": 0.9900000095367432
+    },
+    "vitl14": {
+      "label": "ViT-L/14",
+      "knn": 0.9925000071525574,
+      "probe": 0.9919999837875366
+    }
+  }
+}

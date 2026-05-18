@@ -1,0 +1,7 @@
+{
+  "figure": "embedding_projection.png",
+  "group": "embeddings",
+  "script": "06",
+  "model": "vitb14",
+  "n_points": 1500
+}

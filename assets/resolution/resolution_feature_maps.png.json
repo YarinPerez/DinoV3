@@ -1,0 +1,12 @@
+{
+  "figure": "resolution_feature_maps.png",
+  "group": "resolution",
+  "script": "08",
+  "model": "ViT-B/14",
+  "resolutions": [
+    224,
+    336,
+    448,
+    560
+  ]
+}
