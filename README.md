@@ -12,7 +12,7 @@ this README walks through them in order. The full write-up is in
 catalogued in [`docs/VISUALIZATION_GUIDE.md`](docs/VISUALIZATION_GUIDE.md).
 
 > **A note on weights.** DINOv3's weights are gated on Hugging Face, so the
-> live figures run on **DINOv2** — openly downloadable and mechanically
+> live figures run on **DINOv2** [2] — openly downloadable and mechanically
 > near-identical (same ViT, same DINO + iBOT + KoLeo training, optional
 > register tokens). Every *mechanism* shown is the one DINOv3 uses; the
 > docs add what DINOv3 specifically changed. An optional DINOv3 code path
@@ -30,7 +30,7 @@ same image under different crops and distortions**. To succeed it must
 discover what is *stable* about an image — its content — which is exactly
 what downstream tasks want.
 
-DINO does this by **self-distillation**. Two copies of a Vision
+DINO [1] does this by **self-distillation**. Two copies of a Vision
 Transformer are kept: a **student**, trained by gradient descent, and a
 **teacher**, whose weights are a slow exponential moving average (EMA) of
 the student's. Both see different crops of one image; the student is
@@ -38,7 +38,7 @@ trained so its output distribution matches the teacher's. Two tricks —
 **centering** and **sharpening** the teacher — stop the trivial solution
 where every image maps to the same vector.
 
-**DINOv3** keeps that recipe and scales it to a 7-billion-parameter ViT on
+**DINOv3** [3] keeps that recipe and scales it to a 7-billion-parameter ViT on
 1.7 billion images, then fixes a newly-found failure mode of very long
 training — *dense features slowly decay* — with **Gram anchoring**. The
 result is the first self-supervised model to beat weakly-supervised models
@@ -66,17 +66,17 @@ uv run python scripts/12_training_visuals.py
 uv run python scripts/13_build_readme_assets.py   # verify all figures exist
 ```
 
-First run downloads the DINOv2 backbones, Oxford-IIIT Pet and STL-10
-(~4 GB total, cached afterwards).
+First run downloads the DINOv2 backbones, Oxford-IIIT Pet [13] and
+STL-10 [12] (~4 GB total, cached afterwards).
 
 ---
 
 ## 1. The Vision Transformer backbone
 
-DINO trains a **Vision Transformer (ViT)**. The image is cut into a grid
+DINO trains a **Vision Transformer (ViT)** [4, 5]. The image is cut into a grid
 of fixed-size **patches**; each patch is linearly embedded into a **token
 vector**. A learned **CLS token** is prepended to summarise the whole
-image, along with a few **register tokens** (scratch space). The tokens
+image, along with a few **register tokens** [6] (scratch space). The tokens
 pass through transformer blocks of self-attention + MLP.
 
 ![ViT pipeline](assets/diagrams/01_vit_pipeline.png)
@@ -85,7 +85,7 @@ pass through transformer blocks of self-attention + MLP.
 
 Position must be injected separately, because attention is order-blind.
 DINOv2 uses *learned* positional embeddings; **DINOv3 uses rotary
-embeddings (RoPE)** that encode *relative* position and rescale cleanly to
+embeddings (RoPE)** [8] that encode *relative* position and rescale cleanly to
 new resolutions.
 
 ![Positional encoding](assets/diagrams/04_positional_encoding.png)
@@ -148,14 +148,15 @@ teacher, kept from collapsing by **centering** and **sharpening**.
 ![Multi-crop](assets/diagrams/06_multicrop.png)
 ![DINO loss](assets/diagrams/07_dino_loss.png)
 
-DINOv2/DINOv3 add two objectives: **iBOT** (predict masked patches — sharp
-dense features) and **KoLeo** (spread embeddings — better retrieval).
+DINOv2/DINOv3 add two objectives: **iBOT** [7] (predict masked patches —
+sharp dense features) and **KoLeo** [9] (spread embeddings — better
+retrieval).
 
 ---
 
 ## 5. Using the frozen features
 
-A trained backbone is **frozen** and reused. t-SNE / UMAP of CLS
+A trained backbone is **frozen** and reused. t-SNE / UMAP [10, 11] of CLS
 embeddings show **classes clustering with no labels used in training**:
 
 ![Embedding projection](assets/embeddings/embedding_projection.png)
@@ -250,10 +251,56 @@ docs/               PRD, PLANNING, TASKS, THEORY, DINOV3_VS_DINOV2, VISUALIZATIO
 assets/             generated figures (PNG + JSON sidecars)
 ```
 
-## Further reading
+## Further reading in this repo
 
 - `docs/THEORY.md` — the full, ordered explanation.
 - `docs/DINOV3_VS_DINOV2.md` — the comparison and the Gram-anchoring deep dive.
 - `docs/VISUALIZATION_GUIDE.md` — every figure: what, how, takeaway.
-- DINO (2021), DINOv2 (2023), DINOv3 (arXiv:2508.10104, 2025),
-  *Vision Transformers Need Registers* (2023).
+
+## References
+
+**The DINO family**
+
+1. Caron, M., Touvron, H., Misra, I., Jégou, H., Mairal, J., Bojanowski, P.,
+   & Joulin, A. (2021). *Emerging Properties in Self-Supervised Vision
+   Transformers* (DINO). ICCV.
+   [arXiv:2104.14294](https://arxiv.org/abs/2104.14294)
+2. Oquab, M., Darcet, T., Moutakanni, T., et al. (2023/2024). *DINOv2:
+   Learning Robust Visual Features without Supervision.* TMLR.
+   [arXiv:2304.07193](https://arxiv.org/abs/2304.07193)
+3. Siméoni, O., et al. (2025). *DINOv3.*
+   [arXiv:2508.10104](https://arxiv.org/abs/2508.10104)
+
+**Architecture & training components**
+
+4. Dosovitskiy, A., et al. (2021). *An Image is Worth 16×16 Words:
+   Transformers for Image Recognition at Scale* (ViT). ICLR.
+   [arXiv:2010.11929](https://arxiv.org/abs/2010.11929)
+5. Vaswani, A., et al. (2017). *Attention Is All You Need.* NeurIPS.
+   [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
+6. Darcet, T., Oquab, M., Mairal, J., & Bojanowski, P. (2024). *Vision
+   Transformers Need Registers.* ICLR.
+   [arXiv:2309.16588](https://arxiv.org/abs/2309.16588)
+7. Zhou, J., et al. (2022). *iBOT: Image BERT Pre-Training with Online
+   Tokenizer.* ICLR. [arXiv:2111.07832](https://arxiv.org/abs/2111.07832)
+8. Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., & Liu, Y. (2021).
+   *RoFormer: Enhanced Transformer with Rotary Position Embedding* (RoPE).
+   [arXiv:2104.09864](https://arxiv.org/abs/2104.09864)
+9. Sablayrolles, A., Douze, M., Schmid, C., & Jégou, H. (2019). *Spreading
+   Vectors for Similarity Search* (KoLeo regularisation). ICLR.
+   [arXiv:1806.03198](https://arxiv.org/abs/1806.03198)
+
+**Visualization methods & datasets**
+
+10. van der Maaten, L., & Hinton, G. (2008). *Visualizing Data using
+    t-SNE.* Journal of Machine Learning Research, 9, 2579–2605.
+11. McInnes, L., Healy, J., & Melville, J. (2018). *UMAP: Uniform Manifold
+    Approximation and Projection for Dimension Reduction.*
+    [arXiv:1802.03426](https://arxiv.org/abs/1802.03426)
+12. Coates, A., Lee, H., & Ng, A. Y. (2011). *An Analysis of Single-Layer
+    Networks in Unsupervised Feature Learning* (STL-10 dataset). AISTATS.
+13. Parkhi, O. M., Vedaldi, A., Zisserman, A., & Jawahar, C. V. (2012).
+    *Cats and Dogs* (Oxford-IIIT Pet dataset). CVPR.
+
+*Citations [n] in the text above point to this list. DINOv3 architecture
+details are drawn from [3]; the live figures use DINOv2 weights [2].*
